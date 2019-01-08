@@ -1,0 +1,18 @@
+$borderColor: #c1c1c1;
+.col-style{
+  //border: 1px solid #c1c1c1;
+  margin-top: 10px;
+  //margin-bottom: 10px;
+  //border-bottom: 1px solid $borderColor;
+  .el-col{
+    padding: 10px;
+    border-top: 1px solid $borderColor;
+    border-left: 1px solid $borderColor;
+  }
+  .el-col:last-child{
+    border-right: 1px solid $borderColor;
+  }
+}
+.col-style{
+  border-bottom: 1px solid $borderColor;
+}

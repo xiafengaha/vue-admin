@@ -1,0 +1,62 @@
+ul{
+
+  li{
+
+    list-style:none;
+  }
+}
+.change-box{
+  ul{
+    clear: both;
+    li{
+      float: left;
+      margin-left: 10px;
+    }
+  }
+
+}
+.change-box, .adjustment-box{
+  height: 100%;
+  //overflow-y: auto;
+}
+.adjustment-box{
+  .dragg-div{
+    /*display: flex;*/
+    /*justify-content: space-between;*/
+    /*clear: both;*/
+    cursor: move;
+    .can-drap{
+    }
+  }
+  .dragg-div:hover{
+    background: rgb(247,247,247);
+  }
+}
+.can-drap{
+  height: 16px;
+  width: 10px;
+  line-height: 60px;
+  display: inline-block;
+  overflow: hidden;
+  text-decoration: none;
+  cursor: move;
+  vertical-align: -4px;
+}
+.tableConfigDialof{
+  .el-dialog__body{
+    padding: 0px 20px !important;
+  }
+}
+.system-head{
+  background-color: #F9F9F9;
+  border-top: 1px solid #E6E6E6;
+  border-bottom: 1px solid #E6E6E6;
+  padding: 10px 0 10px 5px;
+}
+.dragg-div{
+  height: 26px;
+}
+.draggable-box{
+  height: calc(100% - 54px);
+  overflow-y: auto;
+}
