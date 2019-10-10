@@ -1,6 +1,7 @@
 <template>
   <div :class="{'hidden':hidden}" class="pagination-container">
     <el-pagination
+      v-if="pageShow"
       :background="background"
       :current-page.sync="currentPage"
       :page-size.sync="pageSize"
@@ -53,6 +54,11 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+      pageShow: true
+    }
+  },
   computed: {
     currentPage: {
       get() {
@@ -75,6 +81,12 @@ export default {
   },
   methods: {
     handleSizeChange(val) {
+      if (this.currentPage * val > this.total) { // 只有比总数大的情况下需要重新加载分页，不然不需要
+        this.pageShow = false;
+        this.$nextTick(() => {
+          this.pageShow = true
+        })
+      }
       this.$emit('pagination', { page: this.currentPage, limit: val })
       if (this.autoScroll) {
         scrollTo(0, 800)
@@ -82,7 +94,7 @@ export default {
     },
     handleCurrentChange(val) {
       // const newVal = (val - 1) * 10
-      this.$emit('pagination', { page: val, limit: this.pageSize })
+      this.$emit('pagination', { page: val, limit: this.pageSize })// 切换页码的时候，不需要重置，因为不会存在，比总数多的情况
       if (this.autoScroll) {
         scrollTo(0, 800)
       }
