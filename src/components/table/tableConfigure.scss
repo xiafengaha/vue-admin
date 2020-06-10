@@ -1,62 +1,144 @@
-ul{
-
-  li{
-
-    list-style:none;
-  }
-}
-.change-box{
-  ul{
-    clear: both;
-    li{
-      float: left;
-      margin-left: 10px;
+@import '~styles/variable.scss';
+ul {
+    li {
+        list-style: none;
     }
-  }
+}
 
+.change-box {
+    ul {
+        clear: both;
+        li {
+            float: left;
+            margin-left: 10px;
+        }
+    }
 }
-.change-box, .adjustment-box{
-  height: 100%;
-  //overflow-y: auto;
+
+.change-box,
+.adjustment-box {
+    height: 100%;
+    //overflow-y: auto;
 }
-.adjustment-box{
-  .dragg-div{
-    /*display: flex;*/
-    /*justify-content: space-between;*/
-    /*clear: both;*/
+
+.adjustment-box {
+    .dragg-div {
+        /*display: flex;*/
+        /*justify-content: space-between;*/
+        /*clear: both;*/
+        cursor: move;
+        .can-drap {}
+    }
+    .dragg-div:hover {
+        background: rgb(247, 247, 247);
+    }
+}
+
+.can-drap {
+    height: 16px;
+    width: 10px;
+    line-height: 60px;
+    display: inline-block;
+    overflow: hidden;
+    text-decoration: none;
     cursor: move;
-    .can-drap{
+    vertical-align: -4px;
+}
+
+.tableConfigDialof {
+    .el-dialog__body {
+        padding: 0px 20px !important;
     }
-  }
-  .dragg-div:hover{
-    background: rgb(247,247,247);
-  }
 }
-.can-drap{
-  height: 16px;
-  width: 10px;
-  line-height: 60px;
-  display: inline-block;
-  overflow: hidden;
-  text-decoration: none;
-  cursor: move;
-  vertical-align: -4px;
+
+.system-head {
+    background-color: #F9F9F9;
+    border-top: 1px solid #E6E6E6;
+    border-bottom: 1px solid #E6E6E6;
+    padding: 10px 0 10px 5px;
 }
-.tableConfigDialof{
-  .el-dialog__body{
-    padding: 0px 20px !important;
-  }
+
+.dragg-div {
+    height: 26px;
 }
-.system-head{
-  background-color: #F9F9F9;
-  border-top: 1px solid #E6E6E6;
-  border-bottom: 1px solid #E6E6E6;
-  padding: 10px 0 10px 5px;
+
+.draggable-box {
+    height: calc(100% - 54px);
+    overflow-y: auto;
 }
-.dragg-div{
-  height: 26px;
+
+.el-table__empty-block {
+    padding-top: 100px;
 }
-.draggable-box{
-  height: calc(100% - 54px);
-  overflow-y: auto;
+
+.el-table__empty-text {
+    background: url('../noData/img/no-data.png') no-repeat center top;
+    display: block;
+    box-sizing: border-box;
+    min-height: 100px;
+    height: 400px; // 根据页面布局算出来是220px，为啥多减10Px，因为屏幕小的时候会有滚动条
+    background-color: #fff;
+    padding-top: 200px;
+}
+
+.tl-rl {
+    //.el-table th, .el-table td{
+    //padding: 12px 0;
+    //}
+    .el-table__body-wrapper {
+        td {
+            padding: 10px 0;
+        }
+    }
+    .el-table__fixed-body-wrapper {
+        // .el-table--small th,
+        // .el-table--small td {
+        //     padding: 10px 0;
+        // }
+        .el-table__row {
+            td {
+                padding: 10px 0;
+            }
+        }
+    }
+    .pagination-style {
+        text-align: right;
+        width: 100%;
+        padding: 0px !important;
+        color: #000;
+        opacity: 0.65;
+        .el-pagination.is-background .btn-prev,
+        .el-pagination.is-background .btn-next,
+        .el-pagination.is-background .el-pager li {
+            background-color: inherit;
+        }
+        .el-pagination .el-pager li.active {
+            border: 1px solid $themeColor;
+            color: $themeColor;
+        }
+    }
+    .el-table--enable-row-transition .el-table__body td {
+        border-right: 0px
+    }
+    .cell {
+        color: #333;
+    }
+    .operation-btn {
+        span {
+            font-weight: 350;
+        }
+    }
+    .el-table__fixed-header-wrapper {
+        table {
+            th {
+                padding: 0;
+                background-color: #ebebeb;
+                .cell {
+                    padding-top: 17px;
+                    padding-bottom: 16px;
+                    background-color: #ebebeb;
+                }
+            }
+        }
+    }
 }
