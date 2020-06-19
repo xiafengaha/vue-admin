@@ -1,128 +1,153 @@
 <template>
-  <div class="navbar">
-    <hamburger :toggle-click="toggleSideBar" :is-active="sidebar.opened" class="hamburger-container"/>
-    <breadcrumb class="breadcrumb-container"/>
-    <div class="right-menu">
-      <template v-if="device!=='mobile'">
-        <error-log class="errLog-container right-menu-item"/>
-        <el-tooltip :content="$t('navbar.screenfull')" effect="dark" placement="bottom">
-          <screenfull class="screenfull right-menu-item"/>
-        </el-tooltip>
-
-        <!--<el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">-->
-        <!--<size-select class="international right-menu-item"/>-->
-        <!--</el-tooltip>-->
-
-        <!--<lang-select class="international right-menu-item"/>-->
-
-        <!--<el-tooltip :content="$t('navbar.theme')" effect="dark" placement="bottom">-->
-        <!--<theme-picker class="theme-switch right-menu-item"/>-->
-        <!--</el-tooltip>-->
-      </template>
-      <el-dropdown class="avatar-container right-menu-item" trigger="click">
-        <div class="avatar-wrapper">
-          <el-tooltip :content="name" class="item" effect="dark" placement="bottom">
-            <img v-if="!avatar" src="../../../assets/img/avater.png" height="40" width="40">
-            <img v-else :src="imgUrl + avatar +'?x-oss-process=image/resize,m_fixed,h_40,w_40'" class="user-avatar">
-            <i class="el-icon-caret-bottom"/>
-          </el-tooltip>
-        </div>
-        <el-dropdown-menu slot="dropdown">
-          <router-link to="/">
-            <el-dropdown-item>
-              {{ $t('navbar.dashboard') }}
-            </el-dropdown-item>
-          </router-link>
-          <el-dropdown-item divided>
-            <span style="display:block;" @click="logout">{{ $t('navbar.logOut') }}</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+  <div class="navbar-container">
+    <div style="display:flex;margin-left:24px;align-items:center;">
+      <hamburger
+        class="hamburger-container"
+        :toggleClick="toggleSideBar"
+        :isActive="sidebar.opened"
+      ></hamburger>
+      <breadcrumb class="breadcrumb-container" />
     </div>
+
+    <el-menu class="navbar" mode="horizontal">
+      <div class="right-menu">
+        <el-dropdown trigger="click" class="avatar-container right-menu-item" @visible-change="changeDropDown">
+          <span class="el-dropdown-link">
+            <i class="iconfont icon-user"></i>
+            {{user.realName}}
+            <!-- dropDownShow -->
+            <i class="el-icon-arrow-down el-icon--right" :style="dropDownShow ? 'transform: rotateZ(180deg); transition: transform .3s' : 'transform: rotateZ(0);transition: transform .3s'"></i>
+      
+          </span>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item @click.native="changePassword" command="changePassword">修改密码</el-dropdown-item>
+            <el-dropdown-item @click.native="singOut" command="singOut">退出登录</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
+    </el-menu>
+    <user-setting v-if="show" ref="changePassword"></user-setting>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
-import ErrorLog from '@/components/ErrorLog'
-import Screenfull from '@/components/Screenfull'
-
+import { mapGetters, mapActions, mapMutations } from "vuex";
+import Breadcrumb from "@/components/breadcrumb/breadcrumb";
+import UserSetting from "components/user-setting/user-setting.vue";
+import hamburger from "components/hamburger/hamburger.vue";
 export default {
   components: {
+    UserSetting,
     Breadcrumb,
-    Hamburger,
-    ErrorLog,
-    Screenfull
+    hamburger
+  },
+  data() {
+    return {
+      show: false,
+      dropDownShow: false
+    };
   },
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'name',
-      'avatar',
-      'device',
-      'imgUrl'
-    ])
+    ...mapGetters(["sidebar", "user"]),
+    isCollapse() {
+      return !this.sidebar.opened;
+    }
+  },
+  created() {
+    // this.getTreeLayerr();
   },
   methods: {
-    toggleSideBar() {
-      this.$store.dispatch('toggleSideBar')
+    changeDropDown(type) {
+      console.log(type, 'type')
+      this.dropDownShow = type;
     },
-    logout() {
-      this.$store.dispatch('FedLogOut').then((res) => {
-        // if (res.code === 0) {
-          location.reload() // 为了重新实例化vue-router对象 避免bug
-          this.$router.push({ path: '/login' })
-        // }
-      })
-    }
+    toggleSideBar() {
+      let menuDom = document.querySelectorAll('.el-menu--inline')
+      if (menuDom.length > 0) {
+        for (let i = 0 ;i < menuDom.length; i++) {
+          menuDom[i].style.display = 'none'
+        }
+      }
+      this.$store.dispatch("toggleSideBar");
+    },
+    changePassword() {
+      this.show = true;
+      setTimeout(() => {
+        this.$refs.changePassword.showChangePass();
+      }, 20);
+    },
+    singOut() {
+      //清空token 角色信息
+      this.log_out();
+      this.$router.push({
+        name: "login"
+      });
+    },
+    ...mapActions(["getTreeLayerr"]),
+    ...mapMutations({
+      log_out: "LOG_OUT"
+    })
   }
-}
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  height: 100%;
+}
+.el-menu--horizontal {
+  border: 0;
+}
 .navbar {
-  height: 50px;
-  line-height: 50px;
+  height: 100%;
+  // line-height: 56px;
   border-radius: 0px !important;
-  .hamburger-container {
-    line-height: 58px;
-    height: 50px;
-    float: left;
-    padding: 0 10px;
-  }
-  .breadcrumb-container{
-    float: left;
-  }
+  // background: #0e213f;
   .errLog-container {
     display: inline-block;
     vertical-align: top;
   }
-  .right-menu, .right-menuList {
+  .right-menu {
     float: right;
     height: 100%;
-    &:focus{
-     outline: none;
+    &:focus {
+      outline: none;
     }
-    .right-menu-item, .right-menuList-item {
+    .right-menu-item {
       display: inline-block;
       margin: 0 8px;
+      &.el-dropdown {
+        // color: #fff;
+      }
+    }
+    .question-container {
+      cursor: pointer;
     }
     .screenfull {
       height: 20px;
     }
-    .international{
+    .international {
       vertical-align: top;
+      .international-icon {
+        font-size: 20px;
+        cursor: pointer;
+        vertical-align: -5px;
+      }
     }
     .theme-switch {
       vertical-align: 15px;
     }
     .avatar-container {
-      height: 50px;
+      height: 100%;
       margin-right: 30px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
       .avatar-wrapper {
-        cursor: pointer;
         margin-top: 5px;
         position: relative;
         .user-avatar {
@@ -141,3 +166,6 @@ export default {
   }
 }
 </style>
+
+
+

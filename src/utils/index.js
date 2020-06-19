@@ -1,291 +1,284 @@
-/**
- * Created by jiachenpan on 16/11/18.
- */
-
-export function parseTime(time, cFormat) {
-  if (arguments.length === 0) {
-    return null
-  }
-  const format = cFormat || '{y}-{m}-{d} {h}:{i}:{s}'
-  let date
-  if (typeof time === 'object') {
-    date = time
-  } else {
-    if (('' + time).length === 10) time = parseInt(time) * 1000
-    date = new Date(time)
-  }
-  const formatObj = {
-    y: date.getFullYear(),
-    m: date.getMonth() + 1,
-    d: date.getDate(),
-    h: date.getHours(),
-    i: date.getMinutes(),
-    s: date.getSeconds(),
-    a: date.getDay()
-  }
-  const time_str = format.replace(/{(y|m|d|h|i|s|a)+}/g, (result, key) => {
-    let value = formatObj[key]
-    // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
-    if (result.length > 0 && value < 10) {
-      value = '0' + value
-    }
-    return value || 0
-  })
-  return time_str
-}
-
-export function formatTime(time, option) {
-  time = +time * 1000
-  const d = new Date(time)
-  const now = Date.now()
-
-  const diff = (now - d) / 1000
-
-  if (diff < 30) {
-    return '刚刚'
-  } else if (diff < 3600) {
-    // less 1 hour
-    return Math.ceil(diff / 60) + '分钟前'
-  } else if (diff < 3600 * 24) {
-    return Math.ceil(diff / 3600) + '小时前'
-  } else if (diff < 3600 * 24 * 2) {
-    return '1天前'
-  }
-  if (option) {
-    return parseTime(time, option)
-  } else {
-    return (
-      d.getMonth() +
-      1 +
-      '月' +
-      d.getDate() +
-      '日' +
-      d.getHours() +
-      '时' +
-      d.getMinutes() +
-      '分'
-    )
-  }
-}
-
-// 格式化时间
-export function getQueryObject(url) {
-  url = url == null ? window.location.href : url
-  const search = url.substring(url.lastIndexOf('?') + 1)
-  const obj = {}
-  const reg = /([^?&=]+)=([^?&=]*)/g
-  search.replace(reg, (rs, $1, $2) => {
-    const name = decodeURIComponent($1)
-    let val = decodeURIComponent($2)
-    val = String(val)
-    obj[name] = val
-    return rs
-  })
-  return obj
-}
-
-/**
- *get getByteLen
- * @param {Sting} val input value
- * @returns {number} output value
- */
-export function getByteLen(val) {
-  let len = 0
-  for (let i = 0; i < val.length; i++) {
-    if (val[i].match(/[^\x00-\xff]/gi) != null) {
-      len += 1
-    } else {
-      len += 0.5
-    }
-  }
-  return Math.floor(len)
-}
-
-export function cleanArray(actual) {
-  const newArray = []
-  for (let i = 0; i < actual.length; i++) {
-    if (actual[i]) {
-      newArray.push(actual[i])
-    }
-  }
-  return newArray
-}
-
-export function param(json) {
-  if (!json) return ''
-  return cleanArray(
-    Object.keys(json).map(key => {
-      if (json[key] === undefined) return ''
-      return encodeURIComponent(key) + '=' + encodeURIComponent(json[key])
-    })
-  ).join('&')
-}
-
-export function param2Obj(url) {
-  const search = url.split('?')[1]
-  if (!search) {
-    return {}
-  }
-  return JSON.parse(
-    '{"' +
-      decodeURIComponent(search)
-        .replace(/"/g, '\\"')
-        .replace(/&/g, '","')
-        .replace(/=/g, '":"') +
-      '"}'
-  )
-}
-
-export function html2Text(val) {
-  const div = document.createElement('div')
-  div.innerHTML = val
-  return div.textContent || div.innerText
-}
-
-export function objectMerge(target, source) {
-  /* Merges two  objects,
-     giving the last one precedence */
-
-  if (typeof target !== 'object') {
-    target = {}
-  }
-  if (Array.isArray(source)) {
-    return source.slice()
-  }
-  Object.keys(source).forEach(property => {
-    const sourceProperty = source[property]
-    if (typeof sourceProperty === 'object') {
-      target[property] = objectMerge(target[property], sourceProperty)
-    } else {
-      target[property] = sourceProperty
-    }
-  })
-  return target
-}
-
-export function toggleClass(element, className) {
-  if (!element || !className) {
-    return
-  }
-  let classString = element.className
-  const nameIndex = classString.indexOf(className)
-  if (nameIndex === -1) {
-    classString += '' + className
-  } else {
-    classString =
-      classString.substr(0, nameIndex) +
-      classString.substr(nameIndex + className.length)
-  }
-  element.className = classString
-}
-
-export const pickerOptions = [
-  {
-    text: '今天',
-    onClick(picker) {
-      const end = new Date()
-      const start = new Date(new Date().toDateString())
-      end.setTime(start.getTime())
-      picker.$emit('pick', [start, end])
-    }
-  },
-  {
-    text: '最近一周',
-    onClick(picker) {
-      const end = new Date(new Date().toDateString())
-      const start = new Date()
-      start.setTime(end.getTime() - 3600 * 1000 * 24 * 7)
-      picker.$emit('pick', [start, end])
-    }
-  },
-  {
-    text: '最近一个月',
-    onClick(picker) {
-      const end = new Date(new Date().toDateString())
-      const start = new Date()
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-      picker.$emit('pick', [start, end])
-    }
-  },
-  {
-    text: '最近三个月',
-    onClick(picker) {
-      const end = new Date(new Date().toDateString())
-      const start = new Date()
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-      picker.$emit('pick', [start, end])
-    }
-  }
-]
-
-export function getTime(type) {
-  if (type === 'start') {
-    return new Date().getTime() - 3600 * 1000 * 24 * 90
-  } else {
-    return new Date(new Date().toDateString())
-  }
-}
-
-export function debounce(func, wait, immediate) {
-  let timeout, args, context, timestamp, result
-
-  const later = function() {
-    // 据上一次触发时间间隔
-    const last = +new Date() - timestamp
-
-    // 上次被包装函数被调用时间间隔last小于设定时间间隔wait
-    if (last < wait && last > 0) {
-      timeout = setTimeout(later, wait - last)
-    } else {
-      timeout = null
-      // 如果设定为immediate===true，因为开始边界已经调用过了此处无需调用
-      if (!immediate) {
-        result = func.apply(context, args)
-        if (!timeout) context = args = null
-      }
-    }
-  }
-
+//防抖
+export function debounce(func, delay) {
+  let timer;
   return function(...args) {
-    context = this
-    timestamp = +new Date()
-    const callNow = immediate && !timeout
-    // 如果延时不存在，重新设定延时
-    if (!timeout) timeout = setTimeout(later, wait)
-    if (callNow) {
-      result = func.apply(context, args)
-      context = args = null
+    if (timer) {
+      clearTimeout(timer);
     }
-
-    return result
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}
+/*
+ * 校验手机号
+ * @params num {number}
+ * */
+export function testPhoneNumer(num) {
+  const reg = /^[1][3,4,5,7,8,9][0-9]{9}$/;
+  return reg.test(parseInt(num));
+}
+/*
+ * 数字
+ * @params num {number}
+ * */
+export function formatCount(num) {
+  if (!num) {
+    return 0;
   }
+  var t = parseInt(num),
+    i,
+    r;
+  for (
+    t = t.toString().replace(/^(\d*)$/, "$1."),
+      t = (t + "00").replace(/(\d*\.\d\d)\d*/, "$1"),
+      t = t.replace(".", ","),
+      i = /(\d)(\d{3},)/;
+    i.test(t);
+
+  )
+    t = t.replace(i, "$1,$2");
+  return (
+    (t = t.replace(/,(\d\d)$/, ".$1")),
+    (r = t.split(".")),
+    r[1] == "00" && (t = r[0]),
+    t
+  );
 }
 
-/**
- * This is just a simple version of deep copy
- * Has a lot of edge cases bug
- * If you want to use a perfect deep copy, use lodash's _.cloneDeep
- */
-export function deepClone(source) {
-  if (!source && typeof source !== 'object') {
-    throw new Error('error arguments', 'shallowClone')
+/*
+ * 金额货币化
+ * @params num {number}
+ * */
+export function formatCurrency(num) {
+  if (!num) {
+    return "0.00"; //金额空时使用标准'0.00'
   }
-  const targetObj = source.constructor === Array ? [] : {}
-  Object.keys(source).forEach(keys => {
-    if (source[keys] && typeof source[keys] === 'object') {
-      targetObj[keys] = deepClone(source[keys])
+  num = num.toString().replace(/\$|\,/g, "");
+  if (isNaN(num)) num = "0";
+  let sign = num == (num = Math.abs(num));
+  num = Math.floor(num * 100 + 0.50000000001);
+  let cents = num % 100;
+  num = Math.floor(num / 100).toString();
+  if (cents < 10) cents = "0" + cents;
+  for (var i = 0; i < Math.floor((num.length - (1 + i)) / 3); i++)
+    num =
+      num.substring(0, num.length - (4 * i + 3)) +
+      "," +
+      num.substring(num.length - (4 * i + 3));
+  return (sign ? "" : "-") + num + "." + cents;
+}
+/*
+ * 校验证件号码
+ * @params num {number}
+ * */
+export function checkIdCard(num) {
+  num = num.toUpperCase();
+  //身份证号码为15位或者18位，15位时全为数字，18位前17位为数字，最后一位是校验位，可能为数字或字符X。
+  if (!/(^\d{15}$)|(^\d{17}([0-9]|X)$)/.test(num)) {
+    return false;
+  }
+  //校验位按照ISO 7064:1983.MOD 11-2的规定生成，X可以认为是数字10。
+  //下面分别分析出生日期和校验位
+  var len, re;
+  len = num.length;
+  if (len == 15) {
+    re = new RegExp(/^(\d{6})(\d{2})(\d{2})(\d{2})(\d{3})$/);
+    var arrSplit = num.match(re);
+
+    //检查生日日期是否正确
+    var dtmBirth = new Date(
+      "19" + arrSplit[2] + "/" + arrSplit[3] + "/" + arrSplit[4]
+    );
+    var bGoodDay;
+    bGoodDay =
+      dtmBirth.getYear() == Number(arrSplit[2]) &&
+      dtmBirth.getMonth() + 1 == Number(arrSplit[3]) &&
+      dtmBirth.getDate() == Number(arrSplit[4]);
+    if (!bGoodDay) {
+      return false;
     } else {
-      targetObj[keys] = source[keys]
+      //将15位身份证转成18位
+      //校验位按照ISO 7064:1983.MOD 11-2的规定生成，X可以认为是数字10。
+      var arrInt = new Array(
+        7,
+        9,
+        10,
+        5,
+        8,
+        4,
+        2,
+        1,
+        6,
+        3,
+        7,
+        9,
+        10,
+        5,
+        8,
+        4,
+        2
+      );
+      var arrCh = new Array(
+        "1",
+        "0",
+        "X",
+        "9",
+        "8",
+        "7",
+        "6",
+        "5",
+        "4",
+        "3",
+        "2"
+      );
+      var nTemp = 0,
+        i;
+      num = num.substr(0, 6) + "19" + num.substr(6, num.length - 6);
+      for (i = 0; i < 17; i++) {
+        nTemp += num.substr(i, 1) * arrInt[i];
+      }
+      num += arrCh[nTemp % 11];
+      return true;
     }
-  })
-  return targetObj
-}
+  }
+  if (len == 18) {
+    re = new RegExp(/^(\d{6})(\d{4})(\d{2})(\d{2})(\d{3})([0-9]|X)$/);
+    var arrSplit = num.match(re);
 
-export function uniqueArr(arr) {
-  return Array.from(new Set(arr))
+    //检查生日日期是否正确
+    var dtmBirth = new Date(
+      arrSplit[2] + "/" + arrSplit[3] + "/" + arrSplit[4]
+    );
+    var bGoodDay;
+    bGoodDay =
+      dtmBirth.getFullYear() == Number(arrSplit[2]) &&
+      dtmBirth.getMonth() + 1 == Number(arrSplit[3]) &&
+      dtmBirth.getDate() == Number(arrSplit[4]);
+    if (!bGoodDay) {
+      // alert(dtmBirth.getYear());
+      //  alert(arrSplit[2]);
+      return false;
+    } else {
+      //检验18位身份证的校验码是否正确。
+      //校验位按照ISO 7064:1983.MOD 11-2的规定生成，X可以认为是数字10。
+      var valnum;
+      var arrInt = new Array(
+        7,
+        9,
+        10,
+        5,
+        8,
+        4,
+        2,
+        1,
+        6,
+        3,
+        7,
+        9,
+        10,
+        5,
+        8,
+        4,
+        2
+      );
+      var arrCh = new Array(
+        "1",
+        "0",
+        "X",
+        "9",
+        "8",
+        "7",
+        "6",
+        "5",
+        "4",
+        "3",
+        "2"
+      );
+      var nTemp = 0,
+        i;
+      for (i = 0; i < 17; i++) {
+        nTemp += num.substr(i, 1) * arrInt[i];
+      }
+      valnum = arrCh[nTemp % 11];
+      if (valnum != num.substr(17, 1)) {
+        return false;
+      }
+      return true;
+    }
+  }
+  return false;
 }
-
-export function isExternal(path) {
-  return /^(https?:|mailto:|tel:)/.test(path)
+/*
+ * 保留几位小数点函数
+ * 因为指令保留操作有个问题就是循环出来的输入框没法同步更新数据
+ * 所以就单独再弄了一个，跟指令的代码一样
+ * @params num {number}
+ * */
+export function retainNumHandle(value, retainNum) {
+  let val = value.replace(/[^\d^\.]+/g, ""); // 去除数字和小数点以外的
+  let valArr = val.split(".");
+  // let retainNum = 0; // 这个是保留几位
+  if (!retainNum) {
+    // 不传就是不保留
+    // 这个是判断用户有没有限制几位小数
+    retainNum = 0;
+  } else {
+    retainNum = Number(retainNum);
+  }
+  if (valArr.length > retainNum) {
+    // 获取有多少小数点
+    valArr.splice(2, valArr.length - retainNum); // 去除第一个小数点之后的所有
+  }
+  if (valArr[1]) {
+    valArr[1] = valArr[1].substr(0, retainNum);
+  }
+  // 这里的2写死。因为不管保留几位小数，都只需要第一位小数点前后的数据，其他都不需要
+  valArr.splice(2, valArr.length - 2);
+  let valStr = valArr.join("."); // 最后的结果
+  return valStr;
 }
+/*
+ * 两个数相除
+ * @params num {number}
+ * */
+export function division(arg1, arg2)
+ {
+  var t1 = 0,
+    t2 = 0,
+    r1,
+    r2;
+  try {
+    t1 = new String(arg1).split(".")[1].length;
+  } catch (e) {}
+  try {
+    t2 = arg2.toString().split(".")[1].length;
+  } catch (e) {}
+  r1 = Number(new String(arg1).replace(".", ""));
+  r2 = Number(arg2.toString().replace(".", ""));
+  //放大倍数后两个数相除 后，乘以两个小数位数长度相减后的10的次幂
+  var money = Mul(r1 / r2, Math.pow(10, t2 - t1));
+  //保留2个小数位数
+  return money.toFixed(2);
+}
+/*
+ * 两个数相乘
+ * @params num {number}
+ * */
+export function Mul(arg1, arg2) {
+  var m = 0,
+    s1 = arg1.toString(),
+    s2 = arg2.toString();
+  //获取两个相乘数据的小数点后面的数据的长度，即获取小数的位数，因为最终相乘计算的结果：结果小数的位数=第一个数的小数位数+第二个数的小数位数
+  try {
+    m += s1.split(".")[1].length;
+  } catch (e) {}
+  try {
+    m += s2.split(".")[1].length;
+  } catch (e) {}
+  //将两个小数去掉小数点，强制转换整个值（即进行数值放开小数点位数的倍数），然后进行相乘的操作，相乘的结果除去10的m次方
+  return (
+    (Number(s1.replace(".", "")) * Number(s2.replace(".", ""))) /
+    Math.pow(10, m)
+  );
+},

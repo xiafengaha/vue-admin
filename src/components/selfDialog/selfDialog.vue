@@ -1,16 +1,12 @@
 <template>
   <transition
     name="dialog-fade"
-    @after-enter="afterEnter"
     @after-leave="afterLeave">
     <div v-show="visible" class="el-dialog__wrapper" @click.self="handleWrapperClick">
       <div
         ref="dialog"
-        :aria-label="title || 'dialog'"
         :class="[{ 'is-fullscreen': fullscreen, 'el-dialog--center': center }, customClass]"
         :style="style"
-        role="dialog"
-        aria-modal="true"
         class="el-dialog">
         <div class="el-dialog__header">
           <slot name="title">
@@ -25,8 +21,8 @@
             <i class="el-dialog__close el-icon el-icon-close"/>
           </button>
         </div>
-        <div v-show="rendered" class="el-dialog__body"><slot/></div>
-        <div v-show="$slots.footer" class="el-dialog__footer">
+        <div v-if="rendered" class="el-dialog__body"><slot/></div>
+        <div v-if="$slots.footer" class="el-dialog__footer">
           <slot name="footer"/>
         </div>
       </div>
@@ -189,9 +185,6 @@ export default {
     updatePopper() {
       this.broadcast('ElSelectDropdown', 'updatePopper')
       this.broadcast('ElDropdownMenu', 'updatePopper')
-    },
-    afterEnter() {
-      this.$emit('opened')
     },
     afterLeave() {
       this.$emit('closed')

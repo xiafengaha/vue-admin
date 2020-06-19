@@ -1,73 +1,43 @@
 <template>
-  <div :class="classObj" class="app-wrapper">
-    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"/>
-    <sidebar class="sidebar-container"/>
-    <div class="main-container">
-      <navbar/>
-      <tags-view/>
-      <el-card style="height: calc(100vh - 84px);overflow: auto" shadow="always">
-        <app-main/>
-      </el-card>
-    </div>
+  <!-- :class="{hideSidebar:!sidebar.opened}" -->
+  <div :class="sidebar.opened ? 'app-wrapper' : 'hideSidebar app-wrapper'">
+    <el-container>
+      <!-- <el-aside> -->
+      <sidebar class="sidebar-container"></sidebar>
+      <!-- </el-aside> -->
+      <el-container>
+        <el-header>
+          <navbar></navbar>
+        </el-header>
+        <el-main style="height: calc(100% - 66px)">
+          <!-- 主体区域 -->
+          <div class="main-container">
+            <!--            <el-scrollbar style="height: 100%" ref="elscrollbar">-->
+            <app-main class="app-main-box"></app-main>
+
+            <!--            </el-scrollbar>-->
+          </div>
+        </el-main>
+      </el-container>
+    </el-container>
   </div>
 </template>
-
 <script>
-import { Navbar, Sidebar, AppMain, TagsView } from './components'
-import ResizeMixin from './mixin/ResizeHandler'
+import { Navbar, Sidebar, AppMain } from "views/layout/components";
+import { mapGetters } from "vuex";
+import "./index.scss";
 
 export default {
-  name: 'Layout',
+  name: "layout",
   components: {
     Navbar,
     Sidebar,
-    AppMain,
-    TagsView
+    AppMain
   },
-  mixins: [ResizeMixin],
   computed: {
-    sidebar() {
-      return this.$store.state.app.sidebar
-    },
-    device() {
-      return this.$store.state.app.device
-    },
-    classObj() {
-      return {
-        hideSidebar: !this.sidebar.opened,
-        openSidebar: this.sidebar.opened,
-        withoutAnimation: this.sidebar.withoutAnimation,
-        mobile: this.device === 'mobile'
-      }
-    }
-  },
-  methods: {
-    handleClickOutside() {
-      this.$store.dispatch('closeSideBar', { withoutAnimation: false })
-    }
+    ...mapGetters(["sidebar"])
   }
-}
+};
 </script>
-
 <style rel="stylesheet/scss" lang="scss" scoped>
-  @import "src/styles/mixin.scss";
-  .app-wrapper {
-    @include clearfix;
-    position: relative;
-    height: 100%;
-    width: 100%;
-    &.mobile.openSidebar{
-      position: fixed;
-      top: 0;
-    }
-  }
-  .drawer-bg {
-    background: #000;
-    opacity: 0.3;
-    width: 100%;
-    top: 0;
-    height: 100%;
-    position: absolute;
-    z-index: 999;
-  }
 </style>

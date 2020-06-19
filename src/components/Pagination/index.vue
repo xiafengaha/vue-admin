@@ -8,6 +8,7 @@
       :layout="layout"
       :total="total"
       v-bind="$attrs"
+      small
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"/>
   </div>
@@ -55,7 +56,7 @@ export default {
     }
   },
   data() {
-    return {
+    return{
       pageShow: true
     }
   },
@@ -88,16 +89,17 @@ export default {
         })
       }
       this.$emit('pagination', { page: this.currentPage, limit: val })
-      if (this.autoScroll) {
-        scrollTo(0, 800)
-      }
+      // if (this.autoScroll) {
+      //   scrollTo(0, 800)
+      // }
     },
     handleCurrentChange(val) {
       // const newVal = (val - 1) * 10
-      this.$emit('pagination', { page: val, limit: this.pageSize })// 切换页码的时候，不需要重置，因为不会存在，比总数多的情况
-      if (this.autoScroll) {
-        scrollTo(0, 800)
-      }
+      // size不管选择多少都让page为1
+      this.$emit('pagination', { page: val, limit: this.pageSize })
+      // if (this.autoScroll) {
+      //   scrollTo(0, 800)
+      // }
     }
   }
 }

@@ -1,0 +1,10 @@
+$--color-primary: #FF960B;
+$--color-success: #7ACC83;
+
+$-color-warning: #F48D58;
+$--color-base-black: #333333;
+
+/* 改变 icon 字体路径变量，必需 */
+$--font-path: '../../node_modules/element-ui/lib/theme-chalk/fonts';
+
+@import "../../node_modules/element-ui/packages/theme-chalk/src/index";

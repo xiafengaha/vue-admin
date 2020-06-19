@@ -1,34 +1,39 @@
 <template>
-  <section class="app-main">
-    <transition name="fade-transform" mode="out-in">
-      <keep-alive :include="cachedViews">
-        <router-view :key="key"/>
-      </keep-alive>
-    </transition>
+  <section class="app-main-container">
+    <!-- 只有保单查询才有面包屑 注意隐藏 -->
+    <!-- <router-view name="breadcrumb"></router-view> -->
+    <!-- 销售管理弹出栏 -->
+    <router-view name="management"></router-view>
+    <div class="app-main">
+      <transition name="fade" mode="out-in">
+        <router-view></router-view>
+        <!-- <keep-alive >
+         动态判断是否缓存
+         </keep-alive>-->
+      </transition>
+    </div>
+      <scroll-top>
+
+    </scroll-top>
+    <!-- <el-backtop target=".main-container .app-main-box"></el-backtop> -->
+
   </section>
 </template>
 
 <script>
-export default {
-  name: 'AppMain',
-  computed: {
-    cachedViews() {
-      return this.$store.state.tagsView.cachedViews
-    },
-    key() {
-      return this.$route.fullPath
-    }
+import scrollTop from '@/components/scrollTop';
+  export default {
+    name: 'AppMain',
+    components: {
+    scrollTop
   }
-}
+  }
 </script>
-
-<style scoped>
-.app-main {
-  /*84 = navbar + tags-view = 50 +34 */
-  min-height: calc(100vh - 84px);
-  width: 100%;
-  position: relative;
-  overflow: hidden;
-}
+<style lang="scss" scoped>
+  .app-main{
+    background-color: #fff;
+    padding: 24px;
+    /*height: calc(100% - 104px);*/
+    /*overflow-y: auto;*/
+  }
 </style>
-

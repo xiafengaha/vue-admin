@@ -1,0 +1,8 @@
+[
+  {"label": "未提交", "value": "INIT"},
+  {"label": "出单中", "value": "WAITING"},
+  {"label": "保障中", "value": "ENABLED"},
+  {"label": "已终止", "value": "FINISHED"},
+  {"label": "已退保", "value": "SURRENDERED"},
+  {"label": "已取消", "value": "CANCELLED"}
+]

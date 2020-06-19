@@ -1,0 +1,113 @@
+/*
+* el-container 布局
+*
+*/
+.el-container{
+  height: 100%;
+  header{
+    height: 66px!important;
+  }
+  .el-header{
+    padding: 0;
+  }
+  .el-main{
+    padding: 0;
+  }
+  .el-aside{
+    .aside-con {
+      background-color: #fff;
+      height: 100%;
+      border-right: 1px solid #e6e6e6;
+    }
+  }
+}
+
+
+/*
+* label-value 表格信息类布局样式
+*/
+.info-list {
+  margin-bottom: 12px;
+  border-bottom: 0;
+  .list-header {
+    padding: 0 12px 0 12px;
+    line-height: 40px;
+    min-width: 120px;
+    h1{
+      font-weight: 600;
+      color: #333;
+      font-size: 16px;
+    }
+  }
+  .list-item-el {
+    font-size: 14px;
+    .list-item-el-label {
+      padding: 12px 0 12px 0;
+      min-width: 140px;
+      text-align: right;
+    }
+    .list-item-el-content {
+      padding: 12px 16px 12px 0;
+    }
+    .pay-img{
+      .img-box{
+        height: 180px;
+        border:1px solid #e5e5e5;
+        border-radius: 5px;
+      }
+    }
+  }
+
+}
+
+/*
+* 侧边栏 和头部iconfont 样式
+*/
+
+.iconfont{
+  margin-right: 12px;
+}
+
+.underline {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.theme-color {
+  color: #FF960B;
+  user-select: none;
+  &.isActive {
+    &:active {
+      color: darken(#FF960B, 10%);
+    }
+  }
+}
+
+.pagination-layout {
+  padding: 24px;
+  background-color: #fff;
+  //position: absolute;
+  bottom: 0;
+  left: 200px;
+  right: 24px;
+  text-align: right;
+  z-index: 1001;
+}
+.pagination-employer-layout{
+  padding: 24px;
+  background-color: #fff;
+  position: absolute;
+  bottom: 0;
+  left: 200px;
+  right: 24px;
+  text-align: right;
+  z-index: 1001;
+}
+.look-form-label{
+  .el-form-item__label{
+    color: #999 !important;
+  }
+}
+.el-form-item__error{
+  margin-top: 2px;
+}

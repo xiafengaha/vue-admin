@@ -1,24 +1,20 @@
+//vuex文件入口
 import Vue from 'vue'
 import Vuex from 'vuex'
-import app from './modules/app'
-import errorLog from './modules/errorLog'
-import permission from './modules/permission'
-import tagsView from './modules/tagsView'
-import user from './modules/user'
-import getters from './getters'
-import fixed from './modules/fixedData' // 固定参数
+import * as actions from './actions'
+import * as getters from './getters'
+import mutations from './mutations'
+import state from './state'
+import createLogger from 'vuex/dist/logger'
+
+
 Vue.use(Vuex)
 
-const store = new Vuex.Store({
-  modules: {
-    app,
-    errorLog,
-    permission,
-    tagsView,
-    user,
-    fixed
-  },
-  getters
+const debug = process.env.NODE_ENV !== 'production'
+export default new Vuex.Store({
+  actions,
+  getters,
+  mutations,
+  state,
+  plugin:debug ? [createLogger()] : []
 })
-
-export default store

@@ -1,0 +1,84 @@
+@import "@/styles/variable.scss";
+.app-wrapper {
+    position: relative;
+    height: calc(100vh);
+    width: 100%;
+}
+
+.app-main-box {
+    padding: 24px;
+}
+
+.main-container,
+.app-main-box {
+    height: 100%;
+}
+
+.hideSidebar {
+    .icon-book,
+    .svg-icon {
+        font-size: 16px;
+    }
+    .el-submenu>.el-submenu__title .el-submenu__icon-arrow {
+        display: none;
+    }
+    .el-submenu>.el-submenu__title>span {
+        display: none;
+    }
+    .el-submenu {
+        .el-submenu__title {
+            height: 44px;
+            line-height: 44px;
+        }
+    }
+    .logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        img {
+            width: 38px;
+            height: 38px;
+            margin: 0 !important;
+        }
+    }
+}
+
+.menu-wrapper {
+    .router-link-active {
+        .is-active {
+            background-color: $themeColor !important;
+        }
+    }
+    .is-active {
+        .el-submenu__title {
+            color: $themeColor !important;
+        }
+    }
+    .el-submenu__title {
+        height: 50px;
+        line-height: 50px;
+    }
+    .el-submenu {
+        .el-menu--inline li {
+            height: 44px;
+            line-height: 44px;
+        }
+    }
+}
+
+.el-menu--vertical {
+    margin-left: 5px;
+    .is-active {
+        span {
+            color: $themeColor;
+        }
+    }
+    .el-menu--popup {
+        min-width: 100px;
+        // padding: 0px;
+        .el-menu-item {
+            height: 44px;
+            line-height: 44px;
+        }
+    }
+}

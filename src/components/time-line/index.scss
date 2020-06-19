@@ -1,0 +1,93 @@
+@import '~styles/variable.scss';
+.time-line-box {
+    height: 100%;
+    overflow: auto;
+    .header {
+        display: flex;
+        margin-bottom: 30px;
+        .img {
+            width: 160px;
+            height: 160px;
+        }
+        .product-box {
+            display: flex;
+            flex-direction: column;
+            margin-left: 20px;
+            width: 100%;
+            text-align: center;
+            .title {
+                font-size: 12px;
+                font-weight: 400;
+                color: rgba(35, 34, 32, 1);
+                line-height: 28px;
+            }
+            .express {
+                font-size: 12px;
+                font-weight: 400;
+                color: rgba(35, 34, 32, 1);
+                display: inline-block;
+            }
+            .order {
+                font-size: 12px;
+                font-weight: 400;
+                color: rgba(158, 158, 158, 1);
+                line-height: 30px
+            }
+        }
+    }
+}
+
+.ys-list {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    .des-time {
+        width: 20%;
+        font-size: 12px;
+        display: flex;
+        flex-direction: column;
+        text-align: right;
+        padding-right: 20px;
+        // color: #888888;
+        .date {
+            color: $textColor;
+        }
+        .time {
+            font-size: 12px;
+            color: #9e9e9e;
+        }
+    }
+    .des-mes {
+        border-left: 1PX solid #e6e6e6;
+        padding-left: 20px;
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        font-size: 26px;
+        position: relative;
+        padding-bottom: 20px;
+        .list-dot {
+            width: 48px;
+            height: 48px;
+            line-height: 48px;
+            position: absolute;
+            top: -9px;
+            left: -24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .dot {
+                width: 15px;
+                height: 15px;
+                border-radius: 100%;
+                background-color: #dddddd;
+            }
+        }
+        .des {
+            font-size: 12px;
+            font-weight: 400;
+            color: rgba(158, 158, 158, 1);
+            line-height: 30px;
+        }
+    }
+}

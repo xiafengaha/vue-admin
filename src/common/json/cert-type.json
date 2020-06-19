@@ -1,0 +1,16 @@
+[
+    {"label": "统一社会信用代码证", "value": "SOCIAL_CODE"},
+    {"label": "组织机构代码证", "value": "ORG_CODE"},
+    {"label": "身份证", "value": "ID_CARD"},
+    {"label": "户口簿", "value": "RESIDENCE_BOOKLET"},
+    {"label": "军官证/警官证", "value": "OFFICER_ID_CARD"},
+    {"label": "驾照", "value": "DRIVING_LICENSE"},
+    {"label": "返乡证", "value": "BACK_HOME_CARD"},
+    {"label": "士兵证", "value": "SOLDIER_ID_CARD"},
+    {"label": "永久居住证", "value": "PERMANENT_RESIDENCE_PERMIT"},
+    {"label": "虚拟组织机构代码证", "value": "VIR_ORG_CODE"},
+    {"label": "台湾通行证", "value": "TAIWAN_PASS"},
+    {"label": "港澳通行证", "value": "HK_MACAO_PASS"},
+    {"label": "护照", "value": "PASSPORT"},
+    {"label": "其他", "value": "OTHERS"}
+  ]

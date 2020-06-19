@@ -1,105 +1,68 @@
 <template>
-  <div v-if="!item.hidden&&item.children" class="menu-wrapper">
-    <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
-      <app-link :to="resolvePath(onlyOneChild.path)">
-        <el-menu-item :index="resolvePath(onlyOneChild.path)" :class="{'submenu-title-noDropdown':!isNest}">
-          <item v-if="onlyOneChild.meta" :icon="onlyOneChild.meta.icon||item.meta.icon" :title="generateTitle(onlyOneChild.meta.title)" />
+  <div class="menu-wrapper">
+    <template v-for="(item, index) in routes" v-if="!item.hidden && item.children">
+      <router-link
+        v-if="item.meta.isAlone"
+        :key="item.name"
+        :to="{name: item.children[0].name}"
+        tag="div"
+      >
+        <el-menu-item :index="item.children[0].meta.index" :class="{'submenu-title-noDropdown':!isNest}">
+          <i v-if="item.meta.icon" class="iconfont" :class="item.meta.icon"></i>
+          <svg-icon v-if="item.meta.svgIcon" class="iconfont" :icon-class="item.meta.svgIcon"></svg-icon>
+          <span slot="title">{{item.children[0].meta.name}}</span>
         </el-menu-item>
-      </app-link>
+      </router-link>
+      <el-submenu  v-else :index="index + 'a'" :key="index" popper-append-to-body>
+        <template slot="title">
+          <i v-if="item.meta.icon" class="iconfont" :class="item.meta.icon"></i>
+          <svg-icon v-if="item.meta.svgIcon" class="iconfont" :icon-class="item.meta.svgIcon"></svg-icon>
+          <span slot="title">{{item.meta.name}}</span>
+        </template>
+        <!-- 对子级导航栏遍历 -->
+        <template  v-if="!child.hidden" v-for="(child, idx) in item.children">
+          <!-- 有三级时 解开注释 -->
+           <!-- v-if="child.children && !!child.children.length" -->
+          <sidebar-item
+            class="nest-menu"
+            :routes="[child]"
+            v-if="child.children && !!child.children.length"
+            :is-nest="true"
+            :key="child.path"
+          ></sidebar-item>
+          <router-link v-else :to="{ name: child.name}" :key="idx" class="link-item" tag="div">
+            <el-menu-item :index="child.meta.index">
+              <span slot="title">{{child.meta.name}}</span>
+            </el-menu-item>
+          </router-link>
+        </template>
+      </el-submenu>
     </template>
-
-    <el-submenu v-else ref="submenu" :index="resolvePath(item.path)">
-      <template slot="title">
-        <item v-if="item.meta" :icon="item.meta.icon" :title="generateTitle(item.meta.title)" />
-      </template>
-
-      <template v-for="child in item.children" v-if="!child.hidden">
-        <sidebar-item
-          v-if="child.children&&child.children.length>0"
-          :is-nest="true"
-          :item="child"
-          :key="child.path"
-          :base-path="resolvePath(child.path)"
-          class="nest-menu" />
-
-        <app-link v-else :to="resolvePath(child.path)" :key="child.name">
-          <el-menu-item :index="resolvePath(child.path)">
-            <item v-if="child.meta" :icon="child.meta.icon" :title="generateTitle(child.meta.title)" />
-          </el-menu-item>
-        </app-link>
-      </template>
-    </el-submenu>
-
   </div>
 </template>
 
 <script>
-import path from 'path'
-import { generateTitle } from '@/utils/i18n'
-import { isExternal } from '@/utils'
-import Item from './Item'
-import AppLink from './Link'
-import FixiOSBug from './FixiOSBug'
-
+import { mapGetters } from "vuex";
 export default {
-  name: 'SidebarItem',
-  components: { Item, AppLink },
-  mixins: [FixiOSBug],
+  name: "SidebarItem",
   props: {
-    // route object
-    item: {
-      type: Object,
-      required: true
+    routes: {
+      type: Array
     },
     isNest: {
       type: Boolean,
       default: false
     },
-    basePath: {
-      type: String,
-      default: ''
-    }
   },
   data() {
     return {
-      onlyOneChild: null
+      timeOut: 20000
     }
   },
-  methods: {
-    hasOneShowingChild(children, parent) {
-      const showingChildren = children.filter(item => {
-        if (item.hidden) {
-          return false
-        } else {
-          // Temp set(will be used if only has one showing child)
-          this.onlyOneChild = item
-          return true
-        }
-      })
-
-      // When there is only one child router, the child router is displayed by default
-      if (showingChildren.length === 1) {
-        return true
-      }
-
-      // Show parent if there are no child router to display
-      if (showingChildren.length === 0) {
-        this.onlyOneChild = { ... parent, path: '', noShowingChildren: true }
-        return true
-      }
-
-      return false
-    },
-    resolvePath(routePath) {
-      if (this.isExternalLink(routePath)) {
-        return routePath
-      }
-      return path.resolve(this.basePath, routePath)
-    },
-    isExternalLink(routePath) {
-      return isExternal(routePath)
-    },
-    generateTitle
-  }
-}
+  computed: {}
+};
 </script>
+
+
+
+
