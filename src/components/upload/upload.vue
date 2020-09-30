@@ -173,10 +173,18 @@ export default {
       const isLt5M = file.size / 1024 / 1024 < 3;
       if (this.uploadData === 2) {
         // 2是图片 1是视频，3是音频
-        if (!isLt5M) {
-          this.$message.warning("上传图片大小不能超过 3M");
+        let accept = this.uploadData.accept.split(",").filter(item => {
+          return item === file.raw.type;
+        });
+        if (accept?.length === 0) {
+          this.$message.warning("上传图片格式错误，请重新选择");
+          return false;
         } else {
-          this.submitUploadFiles(file);
+          if (!isLt5M) {
+            this.$message.warning("上传图片大小不能超过 3M");
+          } else {
+            this.submitUploadFiles(file);
+          }
         }
       } else {
         if (!isLt200M) {
