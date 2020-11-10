@@ -1,7 +1,7 @@
 //防抖
 export function debounce(func, delay) {
   let timer;
-  return function(...args) {
+  return function (...args) {
     if (timer) {
       clearTimeout(timer);
     }
@@ -242,8 +242,7 @@ export function retainNumHandle(value, retainNum) {
  * 两个数相除
  * @params num {number}
  * */
-export function division(arg1, arg2)
- {
+export function division(arg1, arg2) {
   var t1 = 0,
     t2 = 0,
     r1,
@@ -281,4 +280,4 @@ export function Mul(arg1, arg2) {
     (Number(s1.replace(".", "")) * Number(s2.replace(".", ""))) /
     Math.pow(10, m)
   );
-},
+}

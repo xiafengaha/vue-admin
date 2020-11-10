@@ -5,7 +5,7 @@ import policyStatusJSON from "common/json/policy-status.json";
  * */
 function transformArray(array) {
   let object = {};
-  array.map(item => {
+  array.map((item) => {
     object[item.value] = item.label;
   });
   return object;
@@ -18,7 +18,7 @@ const route = {
   refund: "待退费",
   "policy-details": "保单详情",
   insurance: "投保单详情",
-  "employer-policy": "雇主责任险"
+  "employer-policy": "雇主责任险",
 };
 
 export function generateTitle(title) {
@@ -33,7 +33,7 @@ const type = {
   CONTINUED: "续保",
   PLUS: "批增",
   MINUS: "批减",
-  SURRENDER: "退保"
+  SURRENDER: "退保",
 };
 
 export function generateType(code) {
@@ -48,7 +48,7 @@ const status = {
   INIT: "待核保",
   ERROR: "出单失败",
   PROCESSING: "出单中",
-  DONE: "已完成"
+  DONE: "已完成",
 };
 export function generateStatus(code) {
   return status[code];
@@ -72,7 +72,7 @@ const industry = {
   BUZ_NAT_0727: "餐饮业",
   BUZ_NAT_0718: "零售业",
   BUZ_NAT_0831: "服务业",
-  BUZ_NAT_0944: "其他"
+  BUZ_NAT_0944: "其他",
 };
 
 export function generateIndustry(code) {
@@ -85,7 +85,7 @@ export function generateIndustry(code) {
 
 const sex = {
   M: "男",
-  F: "女"
+  F: "女",
 };
 
 export function generateSex(code) {
@@ -109,7 +109,7 @@ const papers = {
   TAIWAN_PASS: "台湾通行证",
   HK_MACAO_PASS: "港澳通行证",
   PASSPORT: "护照",
-  OTHERS: "其他"
+  OTHERS: "其他",
 };
 
 export function generatePapers(code) {
@@ -122,7 +122,7 @@ export function generatePapers(code) {
 const TimeLimit = {
   YEAR: "年",
   MONTH: "个月",
-  DAY: "天"
+  DAY: "天",
 };
 export function generateTimeLimit(insuPeriod, insuPeriodUnit) {
   return insuPeriod + TimeLimit[insuPeriodUnit];
@@ -188,9 +188,39 @@ const orderStatus = {
   NOT_SHIPPED: "未发货",
   WAIT_RECEIPT: "待收货",
   CANCEL_ORDER: "已取消",
-  FINISH: "已完成"
+  FINISH: "已完成",
 };
 
 export function getOrderStatus(code) {
   return orderStatus[code];
+}
+// arr.sort(arrSortDown('name'))
+// arr为数组，name为需要排序的key
+export function arrSortDown(name) {
+  return function (obj1, obj2) {
+    var value1 = obj1[name];
+    var value2 = obj2[name];
+    if (value1 > value2) {
+      return -1;
+    } else if (value1 < value2) {
+      return 1;
+    } else {
+      return 0;
+    }
+  };
+}
+// arr.sort(arrSortUp('name'))
+// arr为数组，name为需要排序的key
+export function arrSortUp(name) {
+  return function (obj1, obj2) {
+    var value1 = obj1[name];
+    var value2 = obj2[name];
+    if (value1 < value2) {
+      return -1;
+    } else if (value1 > value2) {
+      return 1;
+    } else {
+      return 0;
+    }
+  };
 }
