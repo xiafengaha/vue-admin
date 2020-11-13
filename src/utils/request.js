@@ -8,14 +8,14 @@ const env = process.env.NODE_ENV;
 // create an axios instance
 const service = axios.create({
   // baseURL: 'http://mch.dtest.com', // api 的 base_url
-  timeout: 50000 // request timeout
+  timeout: 50000, // request timeout
   // withCredentials: true
 });
 let uploadMessageShow = true; //上传功能是否需要message,
 let success = true; // 下载是否直接通过
 // request interceptor
 service.interceptors.request.use(
-  config => {
+  (config) => {
     // header["Authorization"] = token;
     // Do something before request is sent
     if (store.state.token) {
@@ -27,7 +27,7 @@ service.interceptors.request.use(
       [
         "http://bucket-oss-test.oss-cn-shanghai.aliyuncs.com",
         "https://oss.wellprotectedlove.com",
-        "/anonymous/captcha"
+        "/anonymous/captcha",
       ].includes(config.url)
     ) {
       uploadMessageShow = false;
@@ -40,11 +40,10 @@ service.interceptors.request.use(
     } else {
       success = true;
     }
-
     // showFullScreenLoading() // load显示事件
     return config;
   },
-  error => {
+  (error) => {
     // Do something with request error
     // tryHideFullScreenLoading()
     Promise.reject(error);
@@ -60,7 +59,7 @@ service.interceptors.response.use(
    * 如想通过 xmlhttprequest 来状态码标识 逻辑可写在下面error中
    * 以下代码均为样例，请结合自生需求加以修改，若不需要，则可删除
    */
-  response => {
+  (response) => {
     const res = response.data;
     // tryHideFullScreenLoading()
     if (!uploadMessageShow) {
@@ -93,14 +92,14 @@ service.interceptors.response.use(
         // }
         if (res.code === "27800001") {
           router.replace({
-            name: "login"
+            name: "login",
           });
         }
         if (res.message) {
           Message({
             message: res.message,
             type: "error",
-            duration: 5 * 1000
+            duration: 5 * 1000,
           });
         }
 
@@ -110,12 +109,12 @@ service.interceptors.response.use(
       }
     }
   },
-  error => {
+  (error) => {
     // tryHideFullScreenLoading()
     Message({
       message: error.message,
       type: "error",
-      duration: 5 * 1000
+      duration: 5 * 1000,
     });
     return Promise.reject(error);
     // if (error.config.url === '/auth/logout') {

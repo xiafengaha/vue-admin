@@ -3,16 +3,16 @@ export default {}.install = (Vue, options = {}) => {
   Vue.directive("number", {
     update(el, binding, vnode) {
       let ele = el.tagName === "INPUT" ? el : el.querySelector("input");
-      ele.oninput = function() {
+      ele.oninput = function () {
         // 获取相关的指令配置信息
-        let rel = vnode.data.directives.filter(item => {
+        let rel = vnode.data.directives.filter((item) => {
           return item.name === "number";
         })[0];
         vnode.context.$nextTick(() => {
           handleInput(ele, vnode, rel);
         });
       };
-    }
+    },
   });
 };
 function handleInput(ele, vnode, rel) {
@@ -32,6 +32,11 @@ function handleInput(ele, vnode, rel) {
   }
   // 这里的2写死。因为不管保留几位小数，都只需要第一位小数点前后的数据，其他都不需要
   valArr.splice(2, valArr.length - 2);
+  if (retainNum === 0) {
+    valArr = valArr.filter((item) => {
+      return item;
+    });
+  }
   let valStr = valArr.join("."); // 最后的结果
   setValueWithExpressionVue({
     currObj: vnode.context._data,
@@ -39,13 +44,13 @@ function handleInput(ele, vnode, rel) {
     value: valStr,
     key: vnode.key,
     arg: rel.arg,
-    toString: rel.modifiers.string || rel.modifiers.float
+    toString: rel.modifiers.string || rel.modifiers.float,
   });
 }
 
 function setValueWithExpressionVue(option) {
   let expression = option.expression.split(".");
-  expression.forEach(function(item, i) {
+  expression.forEach(function (item, i) {
     if (i < expression.length - 1) {
       option.currObj = option.currObj[item];
     } else {
