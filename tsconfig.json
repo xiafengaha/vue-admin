@@ -1,10 +1,23 @@
 {
-    "compilerOptions": {
-      "target": "es5",
-      "module": "commonjs",
-      "strict": true,
-      "strictNullChecks": true,
-      "esModuleInterop": true,
-      "experimentalDecorators": true
-    }
-  }
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "lib": [
+      "es6",
+      "dom"
+    ],
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@/componetns": ["src/components"]
+    },
+    "types": [
+      "./../element-ui/types"
+    ]
+  },
+  "include": ["./src/**/*"],
+}
